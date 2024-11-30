@@ -147,20 +147,20 @@
     }
 }
 
-function checkName() {
-    const name = localStorage.getItem('readerName');
-    const city = localStorage.getItem('readerCity');
-    const age = localStorage.getItem('readerAge');
-    if (name && city && age) {
-        document.getElementById('greeting-container').innerHTML = `<h2>مرحبًا، ${name} من ${city}، المرحلة ${age}!</h2>`;
-        document.getElementById('buttons-container').style.display = 'grid';
-        document.getElementById('clear-data-container').classList.remove('hidden');
-        updateButtons();
-    } else {
-        document.getElementById('prompt-container').style.display = 'block';
-        document.getElementById('buttons-container').style.display = 'none';
+    function checkName() {
+        const name = localStorage.getItem('readerName');
+        const city = localStorage.getItem('readerCity');
+        const age = localStorage.getItem('readerAge');
+        if (name && city && age) {
+            document.getElementById('greeting-container').innerHTML = `<h2>مرحبًا، ${name} من ${city}، المرحلة ${age}!</h2>`;
+            document.getElementById('buttons-container').style.display = 'grid';
+            document.getElementById('clear-data-container').classList.remove('hidden');
+            updateButtons();
+        } else {
+            document.getElementById('prompt-container').style.display = 'block';
+            document.getElementById('buttons-container').style.display = 'none';
+        }
     }
-}
 
 
         function finishReading(index) {
@@ -175,30 +175,36 @@ function checkName() {
         }
 
         function updateButtons() {
-            const container = document.getElementById('buttons-container');
-            container.innerHTML = '';
-            for (let i = 1; i <= 40; i++) {
-                const button = document.createElement('button');
-                button.className = 'redirect-button small'; // Ensures buttons keep their small size
-                button.textContent = 'اليوم ' + i;
-                const finishTime = localStorage.getItem('button_' + i);
-                if (finishTime) {
-                    if (finishTime === 'cancelled' || finishTime === 'timed out') {
-                        button.className += ' red';
-                        button.textContent += ` (${finishTime})`;
-                    } else {
-                        button.innerHTML += `<br><small>${finishTime}</small>`;
-                    }
-                    button.disabled = true;
-                } else {
-                    button.onclick = () => {
-                        localStorage.setItem('buttonIndex', i);
-                        finishReading(i);
-                    };
-                }
-                container.appendChild(button);
+    const container = document.getElementById('buttons-container');
+    container.innerHTML = '';
+    for (let i = 1; i <= 40; i++) {
+        const button = document.createElement('button');
+        button.className = 'redirect-button small'; // Ensures buttons keep their small size
+        button.textContent = 'اليوم ' + i;
+        const finishTime = localStorage.getItem('button_' + i);
+        if (finishTime) {
+            if (finishTime === 'cancelled' || finishTime === 'timed out') {
+                button.className += ' red';
+                button.textContent += ` (${finishTime})`;
+                // Allow red buttons to be clicked again
+                button.onclick = () => {
+                    localStorage.setItem('buttonIndex', i);
+                    finishReading(i);
+                };
+            } else {
+                button.innerHTML += `<br><small>${finishTime}</small>`;
+                button.disabled = true;
             }
+        } else {
+            button.onclick = () => {
+                localStorage.setItem('buttonIndex', i);
+                finishReading(i);
+            };
         }
+        container.appendChild(button);
+    }
+}
+
         function clearData() {
             if (confirm("سيتم مسح معلومات القارئ مع الايام التي تم تسجيلها.هل أنت متأكد أنك تريد مسح كل البيانات؟")) {
                 localStorage.clear();
