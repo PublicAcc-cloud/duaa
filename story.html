@@ -92,39 +92,52 @@
     </div>
     <script>
         let timeLeft = 900;
-
+    
         function goHome() {
             window.location.href = "index.html";
         }
-
+    
+        function isWithinTimeRange() {
+            const now = new Date();
+            const start = new Date();
+            start.setHours(5, 15, 0, 0); // 5 AM
+            const end = new Date();
+            end.setHours(8, 0, 0, 0); // 10 AM
+            return now >= start && now <= end;
+        }
+    
         function finishReading() {
             const index = localStorage.getItem('buttonIndex');
-            const finishTime = new Date().toLocaleString();
-            localStorage.setItem('button_' + index, finishTime);
-            document.getElementById('story-container').style.display = 'none';
-            document.getElementById('buttons-container').style.display = 'none';
-            document.getElementById('finish-message').style.display = 'block';
+            if (isWithinTimeRange()) {
+                const finishTime = new Date().toLocaleString();
+                localStorage.setItem('button_' + index, finishTime);
+                document.getElementById('story-container').style.display = 'none';
+                document.getElementById('buttons-container').style.display = 'none';
+                document.getElementById('finish-message').style.display = 'block';
+            } else {
+                alert("يجب ان تتم القرائة بين الساعة 5 والربع صباحًا الى 8 صباحًا");
+            }
         }
-
+    
         function showConfirmation() {
             document.getElementById('confirmation-container').style.display = 'block';
             document.getElementById('story-container').style.display = 'none';
             document.getElementById('buttons-container').style.display = 'none';
         }
-
+    
         function hideConfirmation() {
             document.getElementById('confirmation-container').style.display = 'none';
             document.getElementById('story-container').style.display = 'block';
             document.getElementById('buttons-container').style.display = 'block';
         }
-
+    
         function confirmCancel() {
             const index = localStorage.getItem('buttonIndex');
             localStorage.setItem('button_' + index, 'cancelled');
             document.getElementById('confirmation-container').style.display = 'none';
             document.getElementById('cancel-message').style.display = 'block';
         }
-
+    
         function updateTimer() {
             const timerElement = document.getElementById('time');
             if (timeLeft <= 0) {
@@ -138,7 +151,7 @@
             timerElement.textContent = timeLeft;
             timeLeft--;
         }
-
+    
         window.onload = function() {
             const storyContainer = document.getElementById('story-container');
             const buttonsContainer = document.getElementById('buttons-container');
@@ -147,5 +160,6 @@
             setInterval(updateTimer, 1000);
         }
     </script>
+    
 </body>
 </html>
