@@ -100,9 +100,9 @@
         function isWithinTimeRange() {
             const now = new Date();
             const start = new Date();
-            start.setHours(5, 15, 0, 0); // 5 AM
+            start.setHours(5, 15, 0, 0); // 5:15 AM
             const end = new Date();
-            end.setHours(14, 0, 0, 0); // 10 AM
+            end.setHours(8, 0, 0, 0); // 8 AM
             return now >= start && now <= end;
         }
     
